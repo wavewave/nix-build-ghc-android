@@ -50,8 +50,8 @@ BUILD_DOCBOOK_PDF  = NO
 CONF_CC_OPTS_STAGE1 =  -fno-stack-protector --sysroot=/nix/store/y48ld9k8svdrr67ncmla8zr80fx821jd-android-ndk-r10c/libexec/android-ndk-r10c/platforms/android-21/arch-arm
 libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-libraries=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/lib
 libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-includes=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/include
-libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=/nix/store/icxqdhfglcdf9p58vv78wplnbzxq6g4d-ncurses-5.9/include
-libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=/nix/store/icxqdhfglcdf9p58vv78wplnbzxq6g4d-ncurses-5.9/lib
+libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=/home/wavewave/repo/workspace/ghctest/usr/include
+libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=/home/wavewave/repo/workspace/ghctest/usr/lib
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=/home/wavewave/repo/workspace/ghctest/usr/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=/home/wavewave/repo/workspace/ghctest/usr/lib
 EOF
