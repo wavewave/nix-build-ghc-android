@@ -52,7 +52,12 @@ libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-libraries=
 libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-includes=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/include
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=/nix/store/icxqdhfglcdf9p58vv78wplnbzxq6g4d-ncurses-5.9/include
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=/nix/store/icxqdhfglcdf9p58vv78wplnbzxq6g4d-ncurses-5.9/lib
+libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=/home/wavewave/repo/workspace/ghctest/usr/include 
+libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=/home/wavewave/repo/workspace/ghctest/usr/lib
 EOF
+
+#libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=/nix/store/qlxp7vb63fp8kx5vk9a0y3rj8svbvl27-glibc-2.21/include
+#libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=/nix/store/qlxp7vb63fp8kx5vk9a0y3rj8svbvl27-glibc-2.21/lib
 
 # Update config.sub and config.guess
 for x in $(find . -name "config.sub") ; do

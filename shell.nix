@@ -6,9 +6,10 @@ in pkgs.stdenv.mkDerivation {
      buildInputs = with pkgs; [ hsenv
                                 androidenv.androidndk 
 		                m4 autoconf automake
-				ncurses gmp
+				ncurses gmp libiconv
                               ];
      shellHook = ''
+       export ICONV=${pkgs.libiconv}
        export PATH=${pkgs.androidenv.androidndk}//libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"
        export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
