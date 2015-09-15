@@ -70,9 +70,9 @@ apply_patches "base-*" "$GHC_SRC/libraries/base"
 # Configure
 perl boot
 #CFLAGS=--sysroot=/nix/store/y48ld9k8svdrr67ncmla8zr80fx821jd-android-ndk-r10c/libexec/android-ndk-r10c/platforms/android-21/arch-arm
-
+# "$NDK/bin/$NDK_TARGET-gcc --sysroot=/nix/store/y48ld9k8svdrr67ncmla8zr80fx821jd-android-ndk-r10c/libexec/android-ndk-r10c/platforms/android-21/arch-arm"
 ./configure --enable-bootstrap-with-devel-snapshot --prefix="$GHC_PREFIX" --target=$NDK_TARGET \
-	    --with-ghc=$GHC_STAGE0 --with-gcc="$NDK/bin/$NDK_TARGET-gcc --sysroot=/nix/store/y48ld9k8svdrr67ncmla8zr80fx821jd-android-ndk-r10c/libexec/android-ndk-r10c/platforms/android-21/arch-arm" --with-ld=$NDK/bin/$NDK_TARGET-gcc-ld \
+	    --with-ghc=$GHC_STAGE0 --with-gcc=/home/wavewave/repo/workspace/ghctest/arm-linux-androideabi-gcc --with-ld=$NDK/bin/$NDK_TARGET-gcc-ld \
 	    --with-nm=$NDK/bin/$NDK_TARGET-gcc-nm --with-ar=$NDK/bin/$NDK_TARGET-gcc-ar --with-ranlib=$NDK/bin/$NDK_TARGET-gcc-ranlib
 
 function check_install_gmp_constants() {
