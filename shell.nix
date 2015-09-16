@@ -1,16 +1,21 @@
 { pkgs ? (import <nixpkgs>{}) }:
 
 let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; []);
+    ndkWrapper = import ./ndk-wrapper.nix { inherit (pkgs) stdenv makeWrapper;
+                                            androidndk = pkgs.androidenv.androidndk; };
+    ncurses_ndk = import ./ncurses.nix { inherit (pkgs) stdenv fetchurl; inherit ndkWrapper ;
+                                         androidndk = pkgs.androidenv.androidndk; }; 
 in pkgs.stdenv.mkDerivation {
      name = "ghc-android";
      buildInputs = with pkgs; [ hsenv
+                                ndkWrapper
                                 androidenv.androidndk 
 		                m4 autoconf automake
-				ncurses gmp libiconv
+				ncurses_ndk gmp libiconv
                               ];
      shellHook = ''
        export ICONV=${pkgs.libiconv}
-       export PATH=${pkgs.androidenv.androidndk}//libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
+       export PATH=${pkgs.androidenv.androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"
        export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
        export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
