@@ -4,14 +4,17 @@ let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; []);
     ndkWrapper = import ./ndk-wrapper.nix { inherit (pkgs) stdenv makeWrapper;
                                             androidndk = pkgs.androidenv.androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit (pkgs) stdenv fetchurl; inherit ndkWrapper ;
-                                         androidndk = pkgs.androidenv.androidndk; }; 
+                                         androidndk = pkgs.androidenv.androidndk; };
+    libiconv_ndk = import ./libiconv.nix { inherit (pkgs) stdenv fetchurl; inherit ndkWrapper;
+                                           androidndk = pkgs.androidenv.androidndk; };
 in pkgs.stdenv.mkDerivation {
      name = "ghc-android";
      buildInputs = with pkgs; [ hsenv
                                 ndkWrapper
                                 androidenv.androidndk 
 		                m4 autoconf automake
-				ncurses_ndk gmp libiconv
+				ncurses_ndk libiconv_ndk
+				gmp 
                               ];
      shellHook = ''
        export ICONV=${pkgs.libiconv}
