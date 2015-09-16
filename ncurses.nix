@@ -1,10 +1,13 @@
-{ stdenv, fetchurl, androidndk, ndkWrapper }: 
+{ stdenv, fetchurl, androidndk, ndkWrapper, ncurses }: 
 
 stdenv.mkDerivation rec {
-  name = "ncurses-5.9";
+  iname = "ncurses";
+  suffix = "androidndk";
+  version = "5.9";
+  name = iname + "-" + suffix + "-" + version;
 
   src = fetchurl {
-    url = "mirror://gnu/ncurses/${name}.tar.gz";
+    url = "mirror://gnu/ncurses/${iname}-${version}.tar.gz";
     sha256 = "0fsn7xis81za62afan0vvm38bvgzg5wfmv1m86flqcj0nj7jjilh";
   };
 
@@ -12,8 +15,8 @@ stdenv.mkDerivation rec {
   # patches = [ ./clang.patch ./gcc-5.patch ];
 
   configureFlags = [ "--host=arm"
-                     "--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-		     "--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
+                     #"--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
+		     #"--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
                      "--enable-static"
                      "--disable-shared"
                      "--without-manpages"
@@ -22,18 +25,19 @@ stdenv.mkDerivation rec {
 		     "--without-ticlib"
 		     "--without-cxx" ];
 
-  buildInputs = []; 
+  buildInputs = [ ncurses ];
+  phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" ];  
 
   preConfigure = ''
     configureFlagsArray+=("--includedir=$out/include")
     export NDK=${androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64
     export NDK_TARGET=arm-linux-androideabi
-    #export CC=${ndkWrapper}/bin/$NDK_TARGET-gcc
-    #export CPP=${ndkWrapper}/bin/$NDK_TARGET-cpp
-    #export CXX=${ndkWrapper}/bin/$NDK_TARGET-g++
+    export CC=${ndkWrapper}/bin/$NDK_TARGET-gcc
+    export CPP=${ndkWrapper}/bin/$NDK_TARGET-cpp
+    export CXX=${ndkWrapper}/bin/$NDK_TARGET-g++
     export LD=${ndkWrapper}/bin/$NDK_TARGET-ld
-    #export RANLIB=${ndkWrapper}/bin/$NDK_TARGET-gcc-ranlib
-    #export NM=${ndkWrapper}/bin/$NDK_TARGET-gcc-nm
+    export RANLIB=${ndkWrapper}/bin/$NDK_TARGET-gcc-ranlib
+    export NM=${ndkWrapper}/bin/$NDK_TARGET-gcc-nm
     export PKG_CONFIG_LIBDIR="$out/lib/pkgconfig"
     mkdir -p "$PKG_CONFIG_LIBDIR"
   '';

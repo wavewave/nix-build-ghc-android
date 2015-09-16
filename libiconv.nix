@@ -1,10 +1,13 @@
 { stdenv, fetchurl, androidndk, ndkWrapper }: 
 
 stdenv.mkDerivation rec {
-  name = "libiconv-1.14";
-
+  iname = "libiconv";
+  version = "1.14";
+  suffix = "androidndk";
+  name = iname + "-" + suffix + "-" + version;
+  
   src = fetchurl {
-    url = "mirror://gnu/libiconv/${name}.tar.gz";
+    url = "mirror://gnu/libiconv/${iname}-${version}.tar.gz";
     sha256 = "04q6lgl3kglmmhw59igq1n7v3rp1rpkypl366cy1k1yn2znlvckj";
   };
 
