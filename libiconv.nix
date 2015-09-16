@@ -12,8 +12,6 @@ stdenv.mkDerivation rec {
   # patches = [ ./clang.patch ./gcc-5.patch ];
 
   configureFlags = [ "--host=arm"
-                     # "--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-		     # "--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
                      "--enable-static"
                      "--disable-shared"
                      "--without-manpages"
@@ -21,19 +19,27 @@ stdenv.mkDerivation rec {
 		     "--without-cxx" ];
 
   buildInputs = []; 
-
+  phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" ];
   preConfigure = ''
     export NDK=${androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64
     export NDK_TARGET=arm-linux-androideabi
     export CC=${ndkWrapper}/bin/$NDK_TARGET-gcc
     export LD=${ndkWrapper}/bin/$NDK_TARGET-ld
-    #export PKG_CONFIG_LIBDIR="$out/lib/pkgconfig"
-    #mkdir -p "$PKG_CONFIG_LIBDIR"
+    export RANLIB=${ndkWrapper}/bin/$NDK_TARGET-gcc-ranlib
+    export STRIP=${ndkWrapper}/bin/$NDK_TARGET-strip
+    export NM=${ndkWrapper}/bin/$NDK_TARGET-gcc-nm
+    export AR=${ndkWrapper}/bin/$NDK_TARGET-gcc-ar
+    ##export PKG_CONFIG_LIBDIR="$out/lib/pkgconfig"
+    ##mkdir -p "$PKG_CONFIG_LIBDIR"
   '';
 
   enableParallelBuilding = true;
 
   doCheck = false;
+
+  #fixUpPhase = ''
+  #  exit -1
+  #''; #true;
 
 
   #passthru = {
@@ -41,3 +47,7 @@ stdenv.mkDerivation rec {
   #  inherit unicode abiVersion;
   #};
 }
+
+
+                     # "--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
+		     # "--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
