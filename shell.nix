@@ -29,11 +29,27 @@ in with pkgs; stdenv.mkDerivation {
 		     ncurses
 		     gmp 
                    ];
+
+     preConfigure = ''
+cat > mk/build.mk <<EOF
+libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
+libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
+libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
+libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=${ncurses_ndk}/lib
+EOF
+perl boot
+ 
+
+
+
+     '';
+     
      configureFlags = [
        "--target=arm-linux-androideabi"
        "--host=x86_64-unknown-linux-gnu"
        "--build=x86_64-unknown-linux-gnu"
-       "--with-gcc=${stdenv.cc}/bin/cc"
+       "--with-gcc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
+       #"--with-gcc=${stdenv.cc}/bin/cc"
        #"--with-gmp-includes=${gmp}/include" "--with-gmp-libraries=${gmp}/lib"
      ];
 			      
