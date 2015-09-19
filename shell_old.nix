@@ -7,40 +7,57 @@ let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; []);
                                          androidndk = pkgs.androidenv.androidndk; };
     libiconv_ndk = import ./libiconv.nix { inherit (pkgs) stdenv fetchurl; inherit ndkWrapper;
                                            androidndk = pkgs.androidenv.androidndk; };
-in with pkgs; stdenv.mkDerivation {
-     #inherit buildGHCsh;
-     name = "ghc-android";
-     #src = pkgs.fetchurl {
-     #  url = "http://www.haskell.org/ghc/dist/7.8.4/ghc-7.8.4-src.tar.xz";
-     #  sha256 = "1i4254akbb4ym437rf469gc0m40bxm31blp6s1z1g15jmnacs6f3";
-     #};
-
-     src = fetchurl {
-       url = "https://downloads.haskell.org/~ghc/7.10.2/ghc-7.10.2-src.tar.xz";
-       sha256 = "1x8m4rp2v7ydnrz6z9g8x7z3x3d3pxhv2pixy7i7hkbqbdsp7kal";
-     };
+    buildGHCsh = with pkgs; writeScript "build-ghc-android.sh" ''
+#! ${stdenv.shell}
      
+# Setup build.mk
+cat > mk/build.mk <<EOF
+Stage1Only = YES
+DYNAMIC_GHC_PROGRAMS = NO
+SRC_HC_OPTS     = -O -H64m
+GhcStage1HcOpts = -O2 -fasm
+GhcStage2HcOpts = -O2 -fasm $ARCH_OPTS
+GhcHcOpts       = -Rghc-timing
+GhcLibHcOpts    = -O2
+GhcLibWays      = v
+HADDOCK_DOCS       = NO
+BUILD_DOCBOOK_HTML = NO
+BUILD_DOCBOOK_PS   = NO
+BUILD_DOCBOOK_PDF  = NO
+EOF
+export GHC_PREFIX=/home/wavewave/repo/workspace/ghctest/usr
+perl boot
+ 
 
-     buildInputs = [ hsenv
-                     ndkWrapper
-                     androidenv.androidndk 
-		     m4 autoconf automake
-		     ncurses_ndk libiconv_ndk
-		     ncurses
-		     gmp 
-                   ];
-     configureFlags = [
-       "--target=arm-linux-androideabi"
-       "--host=x86_64-unknown-linux-gnu"
-       "--build=x86_64-unknown-linux-gnu"
-       "--with-gcc=${stdenv.cc}/bin/cc"
-       #"--with-gmp-includes=${gmp}/include" "--with-gmp-libraries=${gmp}/lib"
-     ];
-			      
+./configure --enable-bootstrap-with-devel-snapshot --prefix="$GHC_PREFIX" --target=arm-linux-androideabi \
+	    --with-ghc=${hsenv}/bin/ghc --with-gcc=${ndkWrapper}/bin/arm-linux-androideabi-gcc \
+	    --with-ld=${ndkWrapper}/bin/arm-linux-androideabi-ld \
+	    --with-nm=${ndkWrapper}/bin/arm-linux-androideabi-gcc-nm \
+	    --with-ar=${ndkWrapper}/bin/arm-linux-androideabi-gcc-ar \
+	    --with-ranlib=${ndkWrapper}/bin/arm-linux-androideabi-gcc-ranlib
+'';
+
+in pkgs.stdenv.mkDerivation {
+     inherit buildGHCsh;
+     name = "ghc-android";
+
+     src = pkgs.fetchurl {
+       url = "http://www.haskell.org/ghc/dist/7.8.4/ghc-7.8.4-src.tar.xz";
+       sha256 = "1i4254akbb4ym437rf469gc0m40bxm31blp6s1z1g15jmnacs6f3";
+     };
+
+     buildInputs = with pkgs; [ hsenv
+                                ndkWrapper
+                                androidenv.androidndk 
+		                m4 autoconf automake
+				ncurses_ndk libiconv_ndk
+				ncurses
+				gmp 
+                              ];
      shellHook = ''
-       export ICONV=${libiconv}
-       #export PATH=${androidenv.androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
-       export PATH=${ndkWrapper}/bin:$PATH
+       #eval $buildGHCsh
+       export ICONV=${pkgs.libiconv}
+       export PATH=${pkgs.androidenv.androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"
        export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
        export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
@@ -50,7 +67,6 @@ in with pkgs; stdenv.mkDerivation {
 
 # ./configure --target=arm-linux-androideabi  --host=x86_64-unknown-linux-gnu --build=x86_64-unknown-linux-gnu --with-gcc=gcc
 
-       #eval $buildGHCsh
 
       #libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-libraries=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/lib
       # libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-includes=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/include
