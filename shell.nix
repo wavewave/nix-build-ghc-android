@@ -30,6 +30,7 @@ in with pkgs; stdenv.mkDerivation {
 		     ncurses
 		     gmp 
                    ];
+     patches = [ ./unix-posix_vdisable.patch ];
 
      preConfigure = ''
 cat > mk/build.mk <<EOF
@@ -40,10 +41,6 @@ libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=$
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=${ncurses_ndk}/lib
 EOF
 perl boot
- 
-
-
-
      '';
      
      configureFlags = [
@@ -56,8 +53,6 @@ perl boot
      ];
 			      
      shellHook = ''
-       export ICONV=${libiconv}
-       #export PATH=${androidenv.androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin:$PATH
        export PATH=${ndkWrapper}/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"
        export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
