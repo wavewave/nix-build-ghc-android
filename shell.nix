@@ -34,7 +34,10 @@ in with pkgs; stdenv.mkDerivation {
      preConfigure = ''
 cat > mk/build.mk <<EOF
 DYNAMIC_GHC_PROGRAMS=NO
-rts_HC_OPTS += -fno-PIC -static
+#rts_HC_OPTS += -fno-PIC -static
+#GhcLibHcOpts += -fno-PIC -static
+GhcLibWays = v thr
+libraries/ghc-prim_HC_OPTS += -fno-PIC -static
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
