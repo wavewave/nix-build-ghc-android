@@ -11,9 +11,6 @@ stdenv.mkDerivation rec {
     sha256 = "04q6lgl3kglmmhw59igq1n7v3rp1rpkypl366cy1k1yn2znlvckj";
   };
 
-  # gcc-5.patch should be removed after 5.9
-  # patches = [ ./clang.patch ./gcc-5.patch ];
-
   configureFlags = [ "--host=arm"
                      "--enable-static"
                      "--disable-shared"
@@ -32,23 +29,12 @@ stdenv.mkDerivation rec {
     export STRIP=${ndkWrapper}/bin/$NDK_TARGET-strip
     export NM=${ndkWrapper}/bin/$NDK_TARGET-gcc-nm
     export AR=${ndkWrapper}/bin/$NDK_TARGET-gcc-ar
-    ##export PKG_CONFIG_LIBDIR="$out/lib/pkgconfig"
-    ##mkdir -p "$PKG_CONFIG_LIBDIR"
   '';
 
   enableParallelBuilding = true;
 
   doCheck = false;
 
-  #fixUpPhase = ''
-  #  exit -1
-  #''; #true;
-
-
-  #passthru = {
-  #  ldflags = "-lncurses";
-  #  inherit unicode abiVersion;
-  #};
 }
 
 

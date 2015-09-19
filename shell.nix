@@ -5,15 +5,14 @@ let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy ale
                                             androidndk = pkgs.androidenv.androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit (pkgs) stdenv fetchurl ncurses; inherit ndkWrapper ;
                                          androidndk = pkgs.androidenv.androidndk; };
-    libiconv_ndk = import ./libiconv.nix { inherit (pkgs) stdenv fetchurl; inherit ndkWrapper;
+    libiconv_ndk = import ./libiconv.nix { inherit (pkgs) stdenv fetchurl;
+                                           inherit ndkWrapper;
                                            androidndk = pkgs.androidenv.androidndk; };
+    gmp_ndk = import ./gmp.nix { inherit (pkgs) stdenv fetchurl m4;
+                                 inherit ndkWrapper;
+                                 androidndk = pkgs.androidenv.androidndk; };
 in with pkgs; stdenv.mkDerivation {
-     #inherit buildGHCsh;
      name = "ghc-android";
-     #src = pkgs.fetchurl {
-     #  url = "http://www.haskell.org/ghc/dist/7.8.4/ghc-7.8.4-src.tar.xz";
-     #  sha256 = "1i4254akbb4ym437rf469gc0m40bxm31blp6s1z1g15jmnacs6f3";
-     #};
 
      src = fetchurl {
        url = "https://downloads.haskell.org/~ghc/7.10.2/ghc-7.10.2-src.tar.xz";
@@ -26,7 +25,7 @@ in with pkgs; stdenv.mkDerivation {
                      ndkWrapper
                      androidenv.androidndk 
 		     m4 autoconf automake
-		     ncurses_ndk libiconv_ndk
+		     ncurses_ndk libiconv_ndk gmp_ndk
 		     ncurses
 		     gmp 
                    ];
@@ -48,8 +47,7 @@ perl boot
        "--host=x86_64-unknown-linux-gnu"
        "--build=x86_64-unknown-linux-gnu"
        "--with-gcc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-       #"--with-gcc=${stdenv.cc}/bin/cc"
-       #"--with-gmp-includes=${gmp}/include" "--with-gmp-libraries=${gmp}/lib"
+       "--with-gmp-includes=${gmp_ndk}/include" "--with-gmp-libraries=${gmp_ndk}/lib"
      ];
 			      
      shellHook = ''
