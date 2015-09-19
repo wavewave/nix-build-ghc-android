@@ -1,6 +1,6 @@
 { pkgs ? (import <nixpkgs>{}) }:
 
-let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; []);
+let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
     ndkWrapper = import ./ndk-wrapper.nix { inherit (pkgs) stdenv makeWrapper;
                                             androidndk = pkgs.androidenv.androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit (pkgs) stdenv fetchurl ncurses; inherit ndkWrapper ;
@@ -22,6 +22,7 @@ in with pkgs; stdenv.mkDerivation {
      
 
      buildInputs = [ hsenv
+                     llvm_35
                      ndkWrapper
                      androidenv.androidndk 
 		     m4 autoconf automake
@@ -32,6 +33,7 @@ in with pkgs; stdenv.mkDerivation {
 
      preConfigure = ''
 cat > mk/build.mk <<EOF
+DYNAMIC_GHC_PROGRAMS=NO
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
