@@ -31,16 +31,18 @@ in with pkgs; stdenv.mkDerivation {
                    ];
      patches = [ ./unix-posix_vdisable.patch
                  ./unix-posix-files-imports.patch
+		 ./enable-fPIC.patch
                ];
 
      preConfigure = ''
 cat > mk/build.mk <<EOF
 BuildFlavour = quick-cross
 DYNAMIC_GHC_PROGRAMS=NO
+GhcHcOpts = -fPIC
 #rts_HC_OPTS += -fno-PIC -static
 #GhcLibHcOpts += -fno-PIC -static
 GhcLibWays = v thr
-libraries/ghc-prim_HC_OPTS += -fno-PIC -static
+#libraries/ghc-prim_HC_OPTS += -fno-PIC -static
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
