@@ -29,10 +29,13 @@ in with pkgs; stdenv.mkDerivation {
 		     ncurses
 		     gmp 
                    ];
-     patches = [ ./unix-posix_vdisable.patch ];
+     patches = [ ./unix-posix_vdisable.patch
+                 ./unix-posix-files-imports.patch
+               ];
 
      preConfigure = ''
 cat > mk/build.mk <<EOF
+BuildFlavour = quick-cross
 DYNAMIC_GHC_PROGRAMS=NO
 #rts_HC_OPTS += -fno-PIC -static
 #GhcLibHcOpts += -fno-PIC -static

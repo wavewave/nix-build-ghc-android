@@ -1,0 +1,12 @@
+diff -rupN a/libraries/unix/System/Posix/Files/Common.hsc b/libraries/unix/System/Posix/Files/Common.hsc
+--- a/libraries/unix/System/Posix/Files/Common.hsc	2014-12-23 02:32:53.000000000 +0000
++++ b/libraries/unix/System/Posix/Files/Common.hsc	2015-09-19 06:17:21.272579604 +0000
+@@ -92,6 +92,8 @@ import Data.Bits
+ import Data.Int
+ import Data.Ratio
+ #endif
++import Data.Int
++import Data.Ratio
+ import Data.Time.Clock.POSIX (POSIXTime)
+ import System.Posix.Internals
+ import Foreign.C
