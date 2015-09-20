@@ -39,11 +39,22 @@ in with pkgs; stdenv.mkDerivation {
      preConfigure = ''
 cat > mk/build.mk <<EOF
 BuildFlavour = quick-cross
+SRC_HC_OPTS = -H64m -O0
+GhcStage1HcOpts = -O -fPIC
+GhcStage2HcOpts = -O0 -fPIC -fllvm
+SplitObjs = NO
 Stage1Only = YES
+DYNAMIC_BY_DEFAULT = NO
 DYNAMIC_GHC_PROGRAMS=NO
 HADDOCK_DOCS = NO
-GhcHcOpts = -fPIC
-GhcLibWays = v thr
+BUILD_DOCBOOK_HTML = NO
+BUILD_DOCBOOK_PS   = NO
+BUILD_DOCBOOK_PDF  = NO
+INTEGER_LIBRARY = integer-simple
+GhcHcOpts = -Rghc-timing
+#GhcLibWays += p
+GhcLibWays = v thr p
+#v thr
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
@@ -60,8 +71,10 @@ perl boot
        "--with-gmp-includes=${gmp_ndk}/include" "--with-gmp-libraries=${gmp_ndk}/lib"
      ];
 
-     phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" ];
-     
+     phases = [ "unpackPhase" "patchPhase" "configurePhase" "buildPhase" "installPhase" ];
+
+     enableParallelBuilding = true;
+
      shellHook = ''
        export PATH=${ndkWrapper}/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"

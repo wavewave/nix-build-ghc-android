@@ -37,6 +37,3 @@ stdenv.mkDerivation rec {
 
 }
 
-
-                     # "--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-		     # "--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
