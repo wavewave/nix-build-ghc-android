@@ -21,6 +21,7 @@ in with pkgs; stdenv.mkDerivation {
      
 
      buildInputs = [ hsenv
+                     perl
                      llvm_35
                      ndkWrapper
                      androidenv.androidndk 
