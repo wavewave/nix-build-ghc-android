@@ -32,12 +32,15 @@ in with pkgs; stdenv.mkDerivation {
      patches = [ ./unix-posix_vdisable.patch
                  ./unix-posix-files-imports.patch
 		 ./enable-fPIC.patch
+		 ./no-pthread-android.patch
                ];
 
      preConfigure = ''
 cat > mk/build.mk <<EOF
 BuildFlavour = quick-cross
+Stage1Only = YES
 DYNAMIC_GHC_PROGRAMS=NO
+HADDOCK_DOCS = NO
 GhcHcOpts = -fPIC
 #rts_HC_OPTS += -fno-PIC -static
 #GhcLibHcOpts += -fno-PIC -static
