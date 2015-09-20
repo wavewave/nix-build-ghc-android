@@ -42,10 +42,7 @@ Stage1Only = YES
 DYNAMIC_GHC_PROGRAMS=NO
 HADDOCK_DOCS = NO
 GhcHcOpts = -fPIC
-#rts_HC_OPTS += -fno-PIC -static
-#GhcLibHcOpts += -fno-PIC -static
 GhcLibWays = v thr
-#libraries/ghc-prim_HC_OPTS += -fno-PIC -static
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
@@ -61,7 +58,9 @@ perl boot
        "--with-gcc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
        "--with-gmp-includes=${gmp_ndk}/include" "--with-gmp-libraries=${gmp_ndk}/lib"
      ];
-			      
+
+     phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" ];
+     
      shellHook = ''
        export PATH=${ndkWrapper}/bin:$PATH
        export NIX_GHC="${hsenv}/bin/ghc"
@@ -71,29 +70,3 @@ perl boot
      '';
    }
 
-# ./configure --target=arm-linux-androideabi  --host=x86_64-unknown-linux-gnu --build=x86_64-unknown-linux-gnu --with-gcc=gcc
-
-       #eval $buildGHCsh
-
-      #libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-libraries=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/lib
-      # libraries/integer-gmp_CONFIGURE_OPTS += --configure-option=--with-gmp-includes=/nix/store/84bj0jv0483sdz5zhq2a13kf99slrskh-gmp-5.1.3/include
-
-#export CC=${ndkWrapper}/bin/$NDK_TARGET-gcc
-#export LD=${ndkWrapper}/bin/$NDK_TARGET-ld
-#export RANLIB=${ndkWrapper}/bin/$NDK_TARGET-gcc-ranlib
-#export STRIP=${ndkWrapper}/bin/$NDK_TARGET-strip
-#export NM=${ndkWrapper}/bin/$NDK_TARGET-gcc-nm
-#export AR=${ndkWrapper}/bin/$NDK_TARGET-gcc-ar
-
-
-#CONF_CC_OPTS_STAGE1 =  -fno-stack-protector
-
-#libraries/terminfo_CONFIGURE_OPTS = --configure-option=--with-compiler=ghc
-#libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc
-#libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-ld=${ndkWrapper}/bin/arm-linux-androideabi-ld
-#libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
-#libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=${ncurses_ndk}/lib
-
-#libraries/base_CONFIGURE_OPTS += --configure-option=--with-ld=${ndkWrapper}/bin/arm-linux-androideabi-ld
-#libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
-#libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib

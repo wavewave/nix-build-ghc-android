@@ -48,13 +48,4 @@ stdenv.mkDerivation rec {
 
   doCheck = false;
 
-
-
-
-  #passthru = {
-  #  ldflags = "-lncurses";
-  #  inherit unicode abiVersion;
-  #};
 }
-    #/home/wavewave/repo/workspace/ghctest/arm-linux-androideabi-gcc
-#    export CFLAGS=--sysroot=/nix/store/y48ld9k8svdrr67ncmla8zr80fx821jd-android-ndk-r10c/libexec/android-ndk-r10c/platforms/android-21/arch-arm
