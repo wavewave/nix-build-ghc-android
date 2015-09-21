@@ -17,6 +17,14 @@ For recent android, you should make executable binary as position independent ex
 
      arm-unknown-linux-androideabi-ghc -fPIC -optl-pie test.hs
 
+cabal can also be easily used.
+
+
+     cabal --with-ghc=arm-unknown-linux-androideabi-ghc --with-ld=arm-linux-androideabi-ld.gold --with-ghc-pkg=arm-unknown-linux-androideabi-ghc-pkg --ghc-options=-fPIC --ghc-options=-optl-pie configure
+     cabal build
+
+Then you can push resultant executable by `adb push` and run it in adb shell. 
+
 Enjoy!
 
 
