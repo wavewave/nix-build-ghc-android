@@ -14,15 +14,16 @@ ncurses;
 in stdenv.mkDerivation {
      name = "ghc-android-shell";
 
-     buildInputs = [ hsenv ghc-android ndkWrapper ];
+     buildInputs = [ hsenv ghc-android ndkWrapper jdk.home ];
 
-     #shellHook = ''
+     shellHook = ''
+       export JAVA_HOME=${jdk.home}
      #  export PATH=${ndkWrapper}/bin:$PATH
      #  export NIX_GHC="${hsenv}/bin/ghc"
      #  export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
      #  export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
      #  export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
-     #'';
+     '';
      
 
 }
