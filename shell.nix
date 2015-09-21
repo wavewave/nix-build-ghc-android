@@ -9,10 +9,12 @@ let hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]
 ncurses;
                        androidndk = androidenv.androidndk; };
 
+    ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
+
 in stdenv.mkDerivation {
      name = "ghc-android-shell";
 
-     buildInputs = [ hsenv ghc-android ];
+     buildInputs = [ hsenv ghc-android ndkWrapper ];
 
      #shellHook = ''
      #  export PATH=${ndkWrapper}/bin:$PATH
