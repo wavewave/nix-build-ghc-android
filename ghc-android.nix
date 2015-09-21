@@ -1,17 +1,17 @@
-{ pkgs ? (import <nixpkgs>{}) }:
+#{ pkgs ? (import <nixpkgs>{}) }:
+{ stdenv, fetchurl, makeWrapper, perl, m4, autoconf, automake
+, llvm_35, haskell, ncurses
+, androidndk
+}:
 
-let hsenv = pkgs.haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
-    ndkWrapper = import ./ndk-wrapper.nix { inherit (pkgs) stdenv makeWrapper;
-                                            androidndk = pkgs.androidenv.androidndk; };
-    ncurses_ndk = import ./ncurses.nix { inherit (pkgs) stdenv fetchurl ncurses; inherit ndkWrapper ;
-                                         androidndk = pkgs.androidenv.androidndk; };
-    libiconv_ndk = import ./libiconv.nix { inherit (pkgs) stdenv fetchurl;
-                                           inherit ndkWrapper;
-                                           androidndk = pkgs.androidenv.androidndk; };
-    gmp_ndk = import ./gmp.nix { inherit (pkgs) stdenv fetchurl m4;
-                                 inherit ndkWrapper;
-                                 androidndk = pkgs.androidenv.androidndk; };
-in with pkgs; stdenv.mkDerivation {
+let hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
+    ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
+    ncurses_ndk = import ./ncurses.nix { inherit stdenv fetchurl ncurses ndkWrapper androidndk; };
+    libiconv_ndk = import ./libiconv.nix { inherit stdenv fetchurl ndkWrapper androidndk; };
+    gmp_ndk = import ./gmp.nix { inherit stdenv fetchurl m4;
+                                 inherit ndkWrapper androidndk;
+                               };
+in stdenv.mkDerivation {
      name = "ghc-android";
 
      src = fetchurl {
@@ -24,11 +24,12 @@ in with pkgs; stdenv.mkDerivation {
                      perl
                      llvm_35
                      ndkWrapper
-                     androidenv.androidndk 
+                     androidndk 
 		     m4 autoconf automake
-		     ncurses_ndk libiconv_ndk gmp_ndk
+		     ncurses_ndk libiconv_ndk
+		     #gmp_ndk
 		     ncurses
-		     gmp 
+		     #gmp 
                    ];
      patches = [ ./unix-posix_vdisable.patch
                  ./unix-posix-files-imports.patch
@@ -75,12 +76,12 @@ perl boot
 
      enableParallelBuilding = true;
 
-     shellHook = ''
-       export PATH=${ndkWrapper}/bin:$PATH
-       export NIX_GHC="${hsenv}/bin/ghc"
-       export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
-       export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
-       export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
-     '';
+     #shellHook = ''
+     #  export PATH=${ndkWrapper}/bin:$PATH
+     #  export NIX_GHC="${hsenv}/bin/ghc"
+     #  export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
+     #  export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
+     #  export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
+     #'';
    }
 
