@@ -28,4 +28,13 @@ Then you can push resultant executable by `adb push` and run it in adb shell.
 Enjoy!
 
 
+Reference
+---------
+
+This work is based on the following works.
+
+    * [ghc-android](https://github.com/neurocyte/ghc-android)
+    * [docker-build-ghc-android](https://github.com/docker-build-ghc-android)
+    * [ghc on android in haskell wiki](https://wiki.haskell.org/Android)
+    
 
