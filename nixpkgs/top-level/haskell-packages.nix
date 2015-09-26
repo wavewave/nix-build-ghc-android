@@ -107,5 +107,11 @@ rec {
       packageSetConfig = callPackage ../development/haskell-modules/configuration-ghcjs.nix { };
     };
 
+    ghc-android = callPackage ../development/haskell-modules {
+      ghc = compiler.ghc-android;
+      packageSetConfig = callPackage ../development/haskell-modules/configuration-ghcjs.nix { };      
+
+    };
+
   };
 }

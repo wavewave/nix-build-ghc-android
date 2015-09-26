@@ -13,6 +13,7 @@ let hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
                                };
 in stdenv.mkDerivation {
      name = "ghc-android";
+     version = "7.10.2";
 
      src = fetchurl {
        url = "https://downloads.haskell.org/~ghc/7.10.2/ghc-7.10.2-src.tar.xz";
@@ -83,5 +84,9 @@ perl boot
      #  export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
      #  export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
      #'';
+
+     meta.license = stdenv.lib.licenses.bsd3;
+     meta.platforms = ["x86_64-linux" "i686-linux" "x86_64-darwin"];
+
    }
 
