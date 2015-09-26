@@ -3,11 +3,13 @@
 with pkgs;
 
 let hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
-
-    ghc-android = import ./ghc-android.nix
-                     { inherit stdenv fetchurl makeWrapper perl m4 autoconf automake llvm_35 haskell
-ncurses;
-                       androidndk = androidenv.androidndk; };
+    haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
+    
+    ghc-android = haskell-packages.compiler.ghc-android ; 
+    #ghc-android = import ./ghc-android.nix
+    #                 { inherit stdenv fetchurl makeWrapper perl m4 autoconf automake llvm_35 haskell
+    #                    ncurses;
+    #                   androidndk = androidenv.androidndk; };
 
     ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
 
