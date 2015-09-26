@@ -28,13 +28,19 @@ Then you can push resultant executable by `adb push` and run it in adb shell.
 Enjoy!
 
 
+Example
+-------
+
+See https://github.com/wavewave/haskell-android-example (this is based on https://github.com/neurocyte/android-haskell-activity but remove foreign-jni dep)
+
+
 Reference
 ---------
 
 This work is based on the following works.
 
-    * [ghc-android](https://github.com/neurocyte/ghc-android)
-    * [docker-build-ghc-android](https://github.com/docker-build-ghc-android)
-    * [ghc on android in haskell wiki](https://wiki.haskell.org/Android)
+* [ghc-android](https://github.com/neurocyte/ghc-android)
+* [docker-build-ghc-android](https://github.com/docker-build-ghc-android)
+* [ghc on android in haskell wiki](https://wiki.haskell.org/Android)
     
 
