@@ -40,7 +40,7 @@ Reference
 This work is based on the following works.
 
 * [ghc-android](https://github.com/neurocyte/ghc-android)
-* [docker-build-ghc-android](https://github.com/docker-build-ghc-android)
+* [docker-build-ghc-android](https://github.com/sseefried/docker-build-ghc-android)
 * [ghc on android in haskell wiki](https://wiki.haskell.org/Android)
     
 
