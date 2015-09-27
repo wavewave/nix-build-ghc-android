@@ -55,6 +55,7 @@ let
                        concatStringsSep enableFeature optionalAttrs toUpper;
 
   isGhcjs = ghc.isGhcjs or false;
+  isGhcAndroid = ghc.isGhcAndroid or false;
 
   newCabalFileUrl = "http://hackage.haskell.org/package/${pname}-${version}/revision/${revision}.cabal";
   newCabalFile = fetchurl {
@@ -80,23 +81,34 @@ let
 
   defaultConfigureFlags = [
     "--verbose" "--prefix=$out" "--libdir=\\$prefix/lib/\\$compiler" "--libsubdir=\\$pkgid"
-    "--with-gcc=$CC"            # Clang won't work without that extra information.
     "--package-db=$packageConfDir"
     (optionalString (enableSharedExecutables && stdenv.isLinux) "--ghc-option=-optl=-Wl,-rpath=$out/lib/${ghc.name}/${pname}-${version}")
     (optionalString (enableSharedExecutables && stdenv.isDarwin) "--ghc-option=-optl=-Wl,-headerpad_max_install_names")
     (optionalString enableParallelBuilding "--ghc-option=-j$NIX_BUILD_CORES")
     (optionalString useCpphs "--with-cpphs=${cpphs}/bin/cpphs --ghc-options=-cpp --ghc-options=-pgmP${cpphs}/bin/cpphs --ghc-options=-optP--cpp")
-    (enableFeature enableSplitObjs "split-objs")
     (enableFeature enableLibraryProfiling "library-profiling")
     (enableFeature enableExecutableProfiling "executable-profiling")
-    (enableFeature enableSharedLibraries "shared")
     (optionalString (isGhcjs || versionOlder "7" ghc.version) (enableFeature enableStaticLibraries "library-vanilla"))
-    (optionalString (isGhcjs || versionOlder "7.4" ghc.version) (enableFeature enableSharedExecutables "executable-dynamic"))
+    (optionalString ((isGhcjs || versionOlder "7.4" ghc.version) && !isGhcAndroid ) (enableFeature enableSharedExecutables "executable-dynamic"))
     (optionalString (isGhcjs || versionOlder "7" ghc.version) (enableFeature doCheck "tests"))
   ] ++ optionals isGhcjs [
     "--with-hsc2hs=${ghc.nativeGhc}/bin/hsc2hs"
     "--ghcjs"
-  ] ++ [ "--with-ghc-pkg=arm-unknown-linux-androideabi-ghc-pkg" ];
+  ] ++ optionals isGhcAndroid [
+    "--with-hsc2hs=${ghc.nativeGhc}/bin/hsc2hs"
+    "--with-ghc=${ghc}/bin/arm-unknown-linux-androideabi-ghc"
+    "--with-ghc-pkg=${ghc}/bin/arm-unknown-linux-androideabi-ghc-pkg"
+  ] ++ (if isGhcAndroid
+        then [ "--with-gcc=${ghc.androidndk}/bin/arm-linux-androideabi-gcc"
+               "--with-ld=${ghc.androidndk}/bin/arm-linux-androideabi-ld.gold"
+	       "--with-strip=${ghc.androidndk}/bin/arm-linux-androideabi-strip"
+             ]
+        else [ "--with-gcc=$CC"              # Clang won't work without that extra information.
+               (enableFeature enableSharedLibraries "shared")
+               (enableFeature enableSplitObjs "split-objs")
+             ]);
+
+
 
   setupCompileFlags = [
     (optionalString (!coreSetup) "-${packageDbFlag}=$packageConfDir")
@@ -123,7 +135,7 @@ let
   ghcEnv = ghc.withPackages (p: haskellBuildInputs);
 
   setupCommand = if isGhcjs then "${ghc.nodejs}/bin/node ./Setup.jsexe/all.js" else "./Setup";
-  ghcCommand = if isGhcjs then "ghcjs" else "ghc";
+  ghcCommand = if isGhcjs then "ghcjs" else if isGhcAndroid then "arm-unknown-linux-androideabi-ghc" else "ghc";
   ghcCommandCaps = toUpper ghcCommand;
 
 in
@@ -137,7 +149,7 @@ stdenv.mkDerivation ({
 
   prePhases = ["setupCompilerEnvironmentPhase"];
   preConfigurePhases = ["compileBuildDriverPhase"];
-  preInstallPhases = ["haddockPhase"];
+  preInstallPhases = if isGhcAndroid then [] else ["haddockPhase"];
 
   inherit src;
 
@@ -190,7 +202,9 @@ stdenv.mkDerivation ({
     runHook postSetupCompilerEnvironment
   '';
 
-  compileBuildDriverPhase = ''
+  compileBuildDriverPhase =
+    let setupGhcCommand=if isGhcAndroid then "${ghc.nativeGhc}/bin/ghc" else ghcCommand;
+    in ''
     runHook preCompileBuildDriver
 
     for i in Setup.hs Setup.lhs ${defaultSetupHs}; do
@@ -198,7 +212,7 @@ stdenv.mkDerivation ({
     done
 
     echo setupCompileFlags: $setupCompileFlags
-    ${ghcCommand} $setupCompileFlags --make -o Setup -odir $TMPDIR -hidir $TMPDIR $i
+    ${setupGhcCommand} $setupCompileFlags --make -o Setup -odir $TMPDIR -hidir $TMPDIR $i
 
     runHook postCompileBuildDriver
   '';

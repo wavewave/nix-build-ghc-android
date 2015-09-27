@@ -74,7 +74,8 @@ perl boot
 
      passthru = {
        isGhcAndroid = true;
-       #nativeGhc = ghc;
+       nativeGhc = haskell.compiler.ghc7102;
+       androidndk = ndkWrapper;
      };
 
 
