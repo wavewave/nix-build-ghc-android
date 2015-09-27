@@ -16,12 +16,12 @@ let
         inherit stdenv;
         inherit (pkgs) fetchurl pkgconfig glibcLocales coreutils gnugrep gnused;
         inherit (self) ghc jailbreak-cabal;
-        hscolour = overrideCabal self.hscolour (drv: {
-          isLibrary = false;
-          doHaddock = false;
-          hyperlinkSource = false;      # Avoid depending on hscolour for this build.
-          postFixup = "rm -rf $out/lib $out/share $out/nix-support";
-        });
+        #hscolour = overrideCabal self.hscolour (drv: {
+        #  isLibrary = false;
+        #  doHaddock = false;
+        #  hyperlinkSource = false;      # Avoid depending on hscolour for this build.
+        #  postFixup = "rm -rf $out/lib $out/share $out/nix-support";
+        #});
         cpphs = overrideCabal (self.cpphs.overrideScope (self: super: {
           mkDerivation = drv: super.mkDerivation (drv // {
             enableSharedExecutables = false;

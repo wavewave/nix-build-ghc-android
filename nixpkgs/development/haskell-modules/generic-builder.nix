@@ -1,5 +1,6 @@
 { stdenv, fetchurl, ghc, pkgconfig, glibcLocales, coreutils, gnugrep, gnused
-, jailbreak-cabal, hscolour, cpphs
+, jailbreak-cabal # , hscolour
+, cpphs
 }:
 
 { pname
@@ -95,7 +96,7 @@ let
   ] ++ optionals isGhcjs [
     "--with-hsc2hs=${ghc.nativeGhc}/bin/hsc2hs"
     "--ghcjs"
-  ];
+  ] ++ [ "--with-ghc-pkg=arm-unknown-linux-androideabi-ghc-pkg" ];
 
   setupCompileFlags = [
     (optionalString (!coreSetup) "-${packageDbFlag}=$packageConfDir")
@@ -154,13 +155,13 @@ stdenv.mkDerivation ({
     echo "Run jailbreak-cabal to lift version restrictions on build inputs."
     ${jailbreak-cabal}/bin/jailbreak-cabal ${pname}.cabal
   '' + postPatch;
+    #${optionalString (hasActiveLibrary && hyperlinkSource) "export PATH=${hscolour}/bin:$PATH"}
 
   setupCompilerEnvironmentPhase = ''
     runHook preSetupCompilerEnvironment
 
     echo "Build with ${ghc}."
     export PATH="${ghc}/bin:$PATH"
-    ${optionalString (hasActiveLibrary && hyperlinkSource) "export PATH=${hscolour}/bin:$PATH"}
 
     packageConfDir="$TMPDIR/package.conf.d"
     mkdir -p $packageConfDir
