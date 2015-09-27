@@ -82,7 +82,7 @@ let
   defaultConfigureFlags = [
     "--verbose" "--prefix=$out" "--libdir=\\$prefix/lib/\\$compiler" "--libsubdir=\\$pkgid"
     "--package-db=$packageConfDir"
-    (optionalString (enableSharedExecutables && stdenv.isLinux) "--ghc-option=-optl=-Wl,-rpath=$out/lib/${ghc.name}/${pname}-${version}")
+    (optionalString (enableSharedExecutables && stdenv.isLinux) "--ghc-option=-optl=-Wl,-rpath=$out/lib/${ghcUnderLib}/${pname}-${version}")
     (optionalString (enableSharedExecutables && stdenv.isDarwin) "--ghc-option=-optl=-Wl,-headerpad_max_install_names")
     (optionalString enableParallelBuilding "--ghc-option=-j$NIX_BUILD_CORES")
     (optionalString useCpphs "--with-cpphs=${cpphs}/bin/cpphs --ghc-options=-cpp --ghc-options=-pgmP${cpphs}/bin/cpphs --ghc-options=-optP--cpp")
@@ -137,7 +137,8 @@ let
   setupCommand = if isGhcjs then "${ghc.nodejs}/bin/node ./Setup.jsexe/all.js" else "./Setup";
   ghcCommand = if isGhcjs then "ghcjs" else if isGhcAndroid then "arm-unknown-linux-androideabi-ghc" else "ghc";
   ghcCommandCaps = toUpper ghcCommand;
-
+  ghcUnderLib = if isGhcAndroid then "arm-unknown-linux-androideabi-ghc-" + ghc.version else ghc.name;  
+  
 in
 
 assert allPkgconfigDepends != [] -> pkgconfig != null;
@@ -186,8 +187,8 @@ stdenv.mkDerivation ({
       findInputs $i inputClosure propagated-native-build-inputs
     done
     for p in $inputClosure; do
-      if [ -d "$p/lib/${ghc.name}/package.conf.d" ]; then
-        cp -f "$p/lib/${ghc.name}/package.conf.d/"*.conf $packageConfDir/
+      if [ -d "$p/lib/${ghcUnderLib}/package.conf.d" ]; then
+        cp -f "$p/lib/${ghcUnderLib}/package.conf.d/"*.conf $packageConfDir/
         continue
       fi
       if [ -d "$p/include" ]; then
@@ -261,7 +262,7 @@ stdenv.mkDerivation ({
 
     ${if !hasActiveLibrary then "${setupCommand} install" else ''
       ${setupCommand} copy
-      local packageConfDir="$out/lib/${ghc.name}/package.conf.d"
+      local packageConfDir="$out/lib/${ghcUnderLib}/package.conf.d"
       local packageConfFile="$packageConfDir/${pname}-${version}.conf"
       mkdir -p "$packageConfDir"
       ${setupCommand} register --gen-pkg-config=$packageConfFile

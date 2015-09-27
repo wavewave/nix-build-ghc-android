@@ -34,7 +34,7 @@ let
   ghc761OrLater = isGhcjs || lib.versionOlder "7.6.1" ghc.version;
   packageDBFlag = if ghc761OrLater then "--global-package-db" else "--global-conf";
   ghcCommand    = if isGhcjs then "ghcjs" else if isGhcAndroid then "arm-unknown-linux-androideabi-ghc" else "ghc";
-  ghcCommandCaps= lib.toUpper ghcCommand;
+  ghcCommandCaps= if isGhcAndroid then "GHC" else lib.toUpper ghcCommand;
   libDir        = "$out/lib/${ghcCommand}-${ghc.version}";
   docDir        = "$out/share/doc/ghc/html";
   packageCfgDir = "${libDir}/package.conf.d";
@@ -93,6 +93,7 @@ buildEnv {
       fi
     done
 
+    echo "${ghcCommand}-pkg"
     ${lib.optionalString hasLibraries "$out/bin/${ghcCommand}-pkg recache"}
     $out/bin/${ghcCommand}-pkg check
   '' + postBuild;
