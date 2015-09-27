@@ -3,10 +3,12 @@
 with pkgs;
 
 let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
-    ghc-android = import ./ghc-android.nix
-                    { inherit stdenv fetchurl makeWrapper perl m4 autoconf automake llvm_35 haskell ncurses;
-                      androidndk = androidenv.androidndk; };
+    #ghc-android = import ./ghc-android.nix
+    #                { inherit stdenv fetchurl makeWrapper perl m4 autoconf automake llvm_35 haskell ncurses;
+    #                  androidndk = androidenv.androidndk; };
     hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
+    haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
+    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; []);
 
     fhs = buildFHSUserEnv {
             name = "android-env";
@@ -16,7 +18,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
 		androidenv.androidndk
 		jdk schedtool utillinux m4 gperf
                 perl libxml2 zip unzip bison flex lzop gradle25
-		hsenv ghc-android ndkWrapper
+		hsenv ghc-android-env ndkWrapper
               ];
 	    multiPkgs = pkgs: with pkgs; [ zlib ];
             runScript = "bash";

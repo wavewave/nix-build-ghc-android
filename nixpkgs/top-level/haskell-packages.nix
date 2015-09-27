@@ -19,6 +19,7 @@ rec {
       #haskell = packages.haskell; 
       inherit stdenv;
       androidndk = pkgs.androidenv.androidndk;
+      ghc = compiler.ghc784; 
     };
   };
 

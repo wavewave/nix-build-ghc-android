@@ -2,9 +2,10 @@
 { stdenv, fetchurl, makeWrapper, perl, m4, autoconf, automake
 , llvm_35, haskell, ncurses
 , androidndk
+, ghc #, happy, alex
 }:
 
-let hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
+let #hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
     ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit stdenv fetchurl ncurses ndkWrapper androidndk; };
     libiconv_ndk = import ./libiconv.nix { inherit stdenv fetchurl ndkWrapper androidndk; };
@@ -21,7 +22,7 @@ in stdenv.mkDerivation {
      };
      
 
-     buildInputs = [ hsenv
+     buildInputs = [ ghc #happy alex hsenv
                      perl
                      llvm_35
                      ndkWrapper
@@ -76,6 +77,11 @@ perl boot
      phases = [ "unpackPhase" "patchPhase" "configurePhase" "buildPhase" "installPhase" ];
 
      enableParallelBuilding = true;
+
+     passthru = {
+       isGhcAndroid = true;
+       #nativeGhc = ghc;
+     };
 
      #shellHook = ''
      #  export PATH=${ndkWrapper}/bin:$PATH

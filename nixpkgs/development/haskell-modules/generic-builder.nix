@@ -1,5 +1,5 @@
 { stdenv, fetchurl, ghc, pkgconfig, glibcLocales, coreutils, gnugrep, gnused
-, jailbreak-cabal # , hscolour
+, jailbreak-cabal , hscolour
 , cpphs
 }:
 

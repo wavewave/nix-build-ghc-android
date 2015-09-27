@@ -16,6 +16,7 @@ let
         inherit stdenv;
         inherit (pkgs) fetchurl pkgconfig glibcLocales coreutils gnugrep gnused;
         inherit (self) ghc jailbreak-cabal;
+	hscolour = pkgs.haskell.ghc7102.hscolour;
         #hscolour = overrideCabal self.hscolour (drv: {
         #  isLibrary = false;
         #  doHaddock = false;
