@@ -2,16 +2,13 @@
 { stdenv, fetchurl, makeWrapper, perl, m4, autoconf, automake
 , llvm_35, haskell, ncurses
 , androidndk
-, ghc #, happy, alex
+, ghc 
 }:
 
 let #hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
     ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit stdenv fetchurl ncurses ndkWrapper androidndk; };
     libiconv_ndk = import ./libiconv.nix { inherit stdenv fetchurl ndkWrapper androidndk; };
-    gmp_ndk = import ./gmp.nix { inherit stdenv fetchurl m4;
-                                 inherit ndkWrapper androidndk;
-                               };
 in stdenv.mkDerivation {
      name = "ghc-android";
      version = "7.10.2";
@@ -29,9 +26,7 @@ in stdenv.mkDerivation {
                      androidndk 
 		     m4 autoconf automake
 		     ncurses_ndk libiconv_ndk
-		     #gmp_ndk
 		     ncurses
-		     #gmp 
                    ];
      patches = [ ./unix-posix_vdisable.patch
                  ./unix-posix-files-imports.patch
@@ -71,7 +66,6 @@ perl boot
        "--host=x86_64-unknown-linux-gnu"
        "--build=x86_64-unknown-linux-gnu"
        "--with-gcc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-       "--with-gmp-includes=${gmp_ndk}/include" "--with-gmp-libraries=${gmp_ndk}/lib"
      ];
 
      phases = [ "unpackPhase" "patchPhase" "configurePhase" "buildPhase" "installPhase" ];
@@ -83,16 +77,9 @@ perl boot
        #nativeGhc = ghc;
      };
 
-     #shellHook = ''
-     #  export PATH=${ndkWrapper}/bin:$PATH
-     #  export NIX_GHC="${hsenv}/bin/ghc"
-     #  export NIX_GHCPKG="${hsenv}/bin/ghc-pkg"
-     #  export NIX_GHC_DOCDIR="${hsenv}/share/doc/ghc/html"
-     #  export NIX_GHC_LIBDIR=$( $NIX_GHC --print-libdir )
-     #'';
 
      meta.license = stdenv.lib.licenses.bsd3;
-     meta.platforms = ["x86_64-linux" "i686-linux" "x86_64-darwin"];
+     meta.platforms = ["x86_64-linux"];
 
    }
 
