@@ -102,6 +102,7 @@ let
         then [ "--with-gcc=${ghc.androidndk}/bin/arm-linux-androideabi-gcc"
                "--with-ld=${ghc.androidndk}/bin/arm-linux-androideabi-ld.gold"
 	       "--with-strip=${ghc.androidndk}/bin/arm-linux-androideabi-strip"
+	       "--hsc2hs-options=--cross-compile"
              ]
         else [ "--with-gcc=$CC"              # Clang won't work without that extra information.
                (enableFeature enableSharedLibraries "shared")

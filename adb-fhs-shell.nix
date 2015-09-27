@@ -8,7 +8,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
     #                  androidndk = androidenv.androidndk; };
     hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
     haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
-    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; []);
+    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; [ acme-cutegirl ]);
 
     fhs = buildFHSUserEnv {
             name = "android-env";

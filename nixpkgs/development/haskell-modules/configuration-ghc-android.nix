@@ -33,6 +33,9 @@ self: super: {
   unix = null;
   xhtml = null;
 
+  random = dontCheck super.random;
+  network = dontCheck super.network;
+  
   # ekmett/linear#74
   linear = overrideCabal super.linear (drv: {
     prePatch = "sed -i 's/-Werror//g' linear.cabal";
