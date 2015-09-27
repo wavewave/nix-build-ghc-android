@@ -27,6 +27,14 @@ Then you can push resultant executable by `adb push` and run it in adb shell.
 
 Enjoy!
 
+Full Android SDK shell
+----------------------
+
+We also have a full android development shell made with `buildFHSUserEnv` to follow conventional filesystem hierarchy. Start the shell by
+
+    nix-shell adb-fhs-shell.nix -I nixpkgs=(your nixpkgs directory)
+    
+
 
 Example
 -------
