@@ -12,7 +12,7 @@
 , buildTools ? [], libraryToolDepends ? [], executableToolDepends ? [], testToolDepends ? []
 , configureFlags ? []
 , description ? ""
-, doCheck ? stdenv.lib.versionOlder "7.4" ghc.version
+, doCheck ? if ghc.isGhcAndroid then false else stdenv.lib.versionOlder "7.4" ghc.version 
 , doHoogle ? true
 , editedCabalFile ? null
 , enableLibraryProfiling ? false
