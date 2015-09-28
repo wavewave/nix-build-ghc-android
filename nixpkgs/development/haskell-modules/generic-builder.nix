@@ -80,7 +80,7 @@ let
   enableParallelBuilding = versionOlder "7.8" ghc.version && !hasActiveLibrary;
 
   defaultConfigureFlags = [
-    "--verbose" "--prefix=$out" "--libdir=\\$prefix/lib/\\$compiler" "--libsubdir=\\$pkgid"
+    "--verbose" "--prefix=$out" "--libdir=\\$prefix/lib/${ghcUnderLib}" "--libsubdir=\\$pkgid"
     "--package-db=$packageConfDir"
     (optionalString (enableSharedExecutables && stdenv.isLinux) "--ghc-option=-optl=-Wl,-rpath=$out/lib/${ghcUnderLib}/${pname}-${version}")
     (optionalString (enableSharedExecutables && stdenv.isDarwin) "--ghc-option=-optl=-Wl,-headerpad_max_install_names")
