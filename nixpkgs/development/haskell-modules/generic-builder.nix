@@ -280,6 +280,8 @@ stdenv.mkDerivation ({
     runHook postInstall
   '';
 
+  dontStrip = isGhcAndroid ;
+
   passthru = passthru // {
 
     inherit pname version;

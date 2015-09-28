@@ -6,7 +6,7 @@ let hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]
 
     haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
     
-    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; [pandoc] ); # [ network ] ); # acme-cutegirl acme-dont ghc-paths ]) ;
+    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; [base64-bytestring]); # [pandoc] ); # [ network ] ); # acme-cutegirl acme-dont ghc-paths ]) ;
     
 
     ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
