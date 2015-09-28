@@ -7,6 +7,9 @@ self: super: {
   # Suitable LLVM version.
   llvmPackages = pkgs.llvmPackages_35;
 
+  inherit (pkgs.haskell.packages.ghc7102) jailbreak-cabal alex happy;
+
+
   # Disable GHC 7.10.x core libraries.
   array = null;
   base = null;
@@ -58,10 +61,6 @@ self: super: {
     jailbreak = false;
     doHaddock = false;
     postUnpack = "sourceRoot+=/Cabal";
-  });
-  jailbreak-cabal = overrideCabal super.jailbreak-cabal (drv: {
-    executableHaskellDepends = [ self.Cabal_1_23_0_0 ];
-    preConfigure = "sed -i -e 's/Cabal == 1.20\\.\\*/Cabal >= 1.23/' jailbreak-cabal.cabal";
   });
 
   idris =
@@ -123,11 +122,6 @@ self: super: {
   # Test suite fails with time >= 1.5
   http-date = dontCheck super.http-date;
 
-  # Version 1.19.5 fails its test suite.
-  happy = dontCheck super.happy;
-
-  # Test suite fails in "/tokens_bytestring_unicode.g.bin".
-  alex = dontCheck super.alex;
 
   # Upstream was notified about the over-specified constraint on 'base'
   # but refused to do anything about it because he "doesn't want to
