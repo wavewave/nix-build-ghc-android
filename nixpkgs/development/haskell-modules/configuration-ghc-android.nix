@@ -4,6 +4,8 @@ with import ./lib.nix { inherit pkgs; };
 
 self: super: {
 
+  mkDerivation = drv: super.mkDerivation (drv // { doHaddock = false; });
+
   # Suitable LLVM version.
   llvmPackages = pkgs.llvmPackages_35;
 
