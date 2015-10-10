@@ -1,4 +1,3 @@
-#{ pkgs ? (import <nixpkgs>{}) }:
 { stdenv, fetchurl, makeWrapper, perl, m4, autoconf, automake
 , llvm_35, haskell, ncurses
 , androidndk
@@ -24,15 +23,16 @@ in stdenv.mkDerivation {
                      llvm_35
                      ndkWrapper
                      androidndk 
-		     m4 autoconf automake
-		     ncurses_ndk libiconv_ndk
-		     ncurses
+                     m4 autoconf automake
+                     ncurses_ndk libiconv_ndk
+                     ncurses
                    ];
      patches = [ ./unix-posix_vdisable.patch
                  ./unix-posix-files-imports.patch
-		 ./enable-fPIC.patch
-		 ./no-pthread-android.patch
-                 ./force_CC_SUPPORTS_TLS_equal_zero.patch		 
+                 ./enable-fPIC.patch
+                 ./no-pthread-android.patch
+                 ./force_CC_SUPPORTS_TLS_equal_zero.patch
+                 ./undefine_MYTASK_USE_TLV_for_CC_SUPPORTS_TLS_zero.patch
                ];
 
      preConfigure = ''
