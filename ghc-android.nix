@@ -19,7 +19,7 @@ in stdenv.mkDerivation {
      };
      
 
-     buildInputs = [ ghc #happy alex hsenv
+     buildInputs = [ ghc
                      perl
                      llvm_35
                      ndkWrapper
@@ -32,6 +32,7 @@ in stdenv.mkDerivation {
                  ./unix-posix-files-imports.patch
 		 ./enable-fPIC.patch
 		 ./no-pthread-android.patch
+                 ./force_CC_SUPPORTS_TLS_equal_zero.patch		 
                ];
 
      preConfigure = ''
@@ -50,9 +51,7 @@ BUILD_DOCBOOK_PS   = NO
 BUILD_DOCBOOK_PDF  = NO
 INTEGER_LIBRARY = integer-simple
 GhcHcOpts = -Rghc-timing
-#GhcLibWays += p
 GhcLibWays = v thr p
-#v thr
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libiconv_ndk}/include 
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include

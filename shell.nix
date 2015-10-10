@@ -2,11 +2,13 @@
 
 with pkgs;
 
-let hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
+let hsenv = haskell.packages.ghc7102.ghcWithPackages
+              (p: with p; [cabal-install network-simple monad-loops text-binary ]);
 
     haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
     
-    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; [network-simple] ); # [ network ] ); # acme-cutegirl acme-dont ghc-paths ]) ;
+    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages
+                        (p: with p; [network-simple monad-loops text-binary ] ); 
     
 
     ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
@@ -14,7 +16,7 @@ let hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]
 in stdenv.mkDerivation {
      name = "ghc-android-shell";
 
-     buildInputs = [ ghc-android-env ndkWrapper jdk.home ]; #hsenv
+     buildInputs = [ hsenv ghc-android-env ndkWrapper jdk.home ]; #hsenv
 
      shellHook = ''
        export JAVA_HOME=${jdk.home}

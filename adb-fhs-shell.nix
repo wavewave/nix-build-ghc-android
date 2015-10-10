@@ -3,12 +3,10 @@
 with pkgs;
 
 let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
-    #ghc-android = import ./ghc-android.nix
-    #                { inherit stdenv fetchurl makeWrapper perl m4 autoconf automake llvm_35 haskell ncurses;
-    #                  androidndk = androidenv.androidndk; };
     hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
     haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
-    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages (p: with p; [ acme-cutegirl ]);
+    ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages
+      (p: with p; [ text-binary network-simple monad-loops ]);
 
     fhs = buildFHSUserEnv {
             name = "android-env";
