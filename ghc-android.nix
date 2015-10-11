@@ -4,8 +4,7 @@
 , ghc 
 }:
 
-let #hsenv = haskell.packages.ghc784.ghcWithPackages (p: with p; [ happy alex ]);
-    ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
+let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidndk; };
     ncurses_ndk = import ./ncurses.nix { inherit stdenv fetchurl ncurses ndkWrapper androidndk; };
     libiconv_ndk = import ./libiconv.nix { inherit stdenv fetchurl ndkWrapper androidndk; };
 in stdenv.mkDerivation {

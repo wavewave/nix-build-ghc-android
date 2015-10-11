@@ -23,8 +23,3 @@ stdenv.mkDerivation {
      '';
    }
 
-#       cat >> $out/bin/arm-linux-androideabi-gcc  << EOF
-#       #! ${stdenv.shell}
-#       ${androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-gcc --sysroot=${androidndk}/libexec/android-ndk-r10c/platforms/android-21/arch-arm \$@
-#       EOF
-#       chmod +x $out/bin/arm-linux-androideabi-gcc

@@ -11,12 +11,7 @@ stdenv.mkDerivation rec {
     sha256 = "0fsn7xis81za62afan0vvm38bvgzg5wfmv1m86flqcj0nj7jjilh";
   };
 
-  # gcc-5.patch should be removed after 5.9
-  # patches = [ ./clang.patch ./gcc-5.patch ];
-
   configureFlags = [ "--host=arm"
-                     #"--with-build-cc=${ndkWrapper}/bin/arm-linux-androideabi-gcc"
-		     #"--with-build-cpp=${ndkWrapper}/bin/arm-linux-androideabi-cpp"
                      "--enable-static"
                      "--disable-shared"
                      "--without-manpages"
