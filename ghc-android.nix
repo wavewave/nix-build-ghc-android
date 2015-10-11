@@ -45,7 +45,7 @@ GhcStage2HcOpts = -O0 -fPIC -fllvm
 SplitObjs = NO
 Stage1Only = YES
 DYNAMIC_BY_DEFAULT = NO
-DYNAMIC_GHC_PROGRAMS=NO
+DYNAMIC_GHC_PROGRAMS = NO
 HADDOCK_DOCS = NO
 BUILD_DOCBOOK_HTML = NO
 BUILD_DOCBOOK_PS   = NO
@@ -57,10 +57,17 @@ libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-includes=${libi
 libraries/base_CONFIGURE_OPTS += --configure-option=--with-iconv-libraries=${libiconv_ndk}/lib
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-includes=${ncurses_ndk}/include
 libraries/terminfo_CONFIGURE_OPTS += --configure-option=--with-curses-libraries=${ncurses_ndk}/lib
+#utils/ghc-pkg_HC_OPTS += -optl-llog
+#utils/hsc2hs_HC_OPTS += -optl-llog
+#utils/ghc-pkg_CONFIGURE_OPTS += --configure-option=--ld-options=-llog
+#utils/hsc2hs_CONFIGURE_OPTS += --configure-option=--ld-options=-llog
 EOF
 perl boot
      '';
-     
+
+     #CONF_LD_LINKER_OPTS_STAGE2="-llog";
+     #TargetElf = NO
+
      configureFlags = [
        "--target=arm-linux-androideabi"
        "--host=x86_64-unknown-linux-gnu"
@@ -69,6 +76,10 @@ perl boot
      ];
 
      phases = [ "unpackPhase" "patchPhase" "configurePhase" "buildPhase" "installPhase" ];
+
+     buildPhase = ''
+       make phase_1_builds
+     '';
 
      enableParallelBuilding = true;
 
