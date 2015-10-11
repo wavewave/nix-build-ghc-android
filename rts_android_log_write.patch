@@ -1,0 +1,39 @@
+diff -rupN a/rts/RtsMessages.c b/rts/RtsMessages.c
+--- a/rts/RtsMessages.c	2014-12-23 02:31:10.000000000 +0000
++++ b/rts/RtsMessages.c	2015-10-11 02:39:17.560332675 +0000
+@@ -19,6 +19,10 @@
+ #include <windows.h>
+ #endif
+ 
++#ifdef __ANDROID__
++#include <android/log.h>
++#endif
++
+ /* -----------------------------------------------------------------------------
+    General message generation functions
+ 
+@@ -163,6 +167,24 @@ rtsFatalInternalErrorFn(const char *s, v
+      fflush(stderr);
+   }
+ 
++#ifdef __ANDROID__
++  {
++     /* don't fflush(stdout); WORKAROUND bug in Linux glibc */
++     if (prog_argv != NULL && prog_name != NULL) {
++         char* s1;
++         sprintf(s1, "%s: internal error: ", prog_name);
++         __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1); 
++     } else {
++         char* s1;
++         sprintf(s1, "internal error: ");
++         __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1);
++     }
++     char* s2;
++     vsprintf(s2, s, ap);
++     __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s2);
++  }
++#endif // __ANDROID__
++   
+ #ifdef TRACING
+   if (RtsFlags.TraceFlags.tracing == TRACE_EVENTLOG) endEventLogging();
+ #endif

@@ -33,6 +33,7 @@ in stdenv.mkDerivation {
                  ./force_CC_SUPPORTS_TLS_equal_zero.patch
                  ./undefine_MYTASK_USE_TLV_for_CC_SUPPORTS_TLS_zero.patch
 		 ./force-relocation-equal-pic.patch
+		 ./rts_android_log_write.patch
                ];
 
      preConfigure = ''
