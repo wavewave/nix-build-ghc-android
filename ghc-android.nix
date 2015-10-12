@@ -77,9 +77,9 @@ perl boot
 
      phases = [ "unpackPhase" "patchPhase" "configurePhase" "buildPhase" "installPhase" ];
 
-     buildPhase = ''
-       make phase_1_builds
-     '';
+     #buildPhase = ''
+     #  make phase_1_builds
+     #'';
 
      enableParallelBuilding = true;
 

@@ -22,15 +22,15 @@ diff -rupN a/rts/RtsMessages.c b/rts/RtsMessages.c
 +      /* don't fflush(stdout); WORKAROUND bug in Linux glibc */
 +      void* handle = dlopen("liblog.so", RTLD_GLOBAL | RTLD_NOW);
 +      int (*__android_log_write)(int, const char*, const char*) = dlsym(handle, "__android_log_write");
-+      if (prog_argv != NULL && prog_name != NULL) {
-+          char* s1;
-+          sprintf(s1, "%s: internal error: ", prog_name);
-+          __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1); 
-+      } else {
-+          char* s1;
-+          sprintf(s1, "internal error: ");
-+          __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1);
-+      }
++  //    if (prog_argv != NULL && prog_name != NULL) {
++  //        char* s1;
++  //        sprintf(s1, "%s: internal error: ", prog_name);
++  //        __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1); 
++  //    } else {
++  //        char* s1;
++  //        sprintf(s1, "internal error: ");
++  //        __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s1);
++  //    }
 +      char* s2;
 +      vsprintf(s2, s, ap);
 +      __android_log_write( ANDROID_LOG_ERROR, "ghc-rts", s2);
