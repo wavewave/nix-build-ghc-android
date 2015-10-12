@@ -7,7 +7,7 @@ diff -rupN a/rts/RtsMessages.c b/rts/RtsMessages.c
  
 +#ifdef __ANDROID__
 +#include <dlfcn.h>
-+//<android/log.h>
++#include <android/log.h>
 +#endif
 +
  /* -----------------------------------------------------------------------------
