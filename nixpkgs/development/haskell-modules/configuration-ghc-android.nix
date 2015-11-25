@@ -89,7 +89,8 @@ self: super: {
   bytestring-builder = dontHaddock super.bytestring-builder;
 
   # We have time 1.5
-  aeson = disableCabalFlag super.aeson "old-locale";
+  aeson = let aeson' = overrideCabal super.aeson (drv: { postPatch = "sed -i -e 's|Data.Aeson.TH|--Data.Aeson.TH|' aeson.cabal"; });
+          in disableCabalFlag aeson' "old-locale";
 
   # requires filepath >=1.1 && <1.4
   Glob = doJailbreak super.Glob;
