@@ -6,7 +6,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
     hsenv = haskell.packages.ghc7102.ghcWithPackages (p: with p; [cabal-install]);
     haskell-packages = import ./nixpkgs/top-level/haskell-packages.nix { inherit pkgs callPackage stdenv; };
     ghc-android-env = haskell-packages.packages.ghc-android.ghcWithPackages
-      (p: with p; [ aeson text-binary network-simple monad-loops ]);
+      (p: with p; [ aeson protocol-buffers text-binary network-simple monad-loops ]);
 
     fhs = buildFHSUserEnv {
             name = "android-env";
