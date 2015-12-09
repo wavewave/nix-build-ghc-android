@@ -30,7 +30,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
                 androidenv.platformTools androidenv.androidsdk_5_1_1_extras
 		androidenv.androidndk 
 		jdk schedtool utillinux m4 gperf
-                perl libxml2 zip unzip bison flex lzop gradle
+                perl libxml2 zip unzip bison flex lzop gradle26
 		hsenv ghc-android-env ndkWrapper
                 protobuf
                 pkgconfig
@@ -39,6 +39,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
             runScript = "bash";
             profile = ''
               export USE_CCACHE=1
+              export JAVA_HOME=${jdk.home}
               export ANDROID_JAVA_HOME=${jdk.home}
 	      export ANDROID_HOME=${androidenv.androidsdk_5_1_1_extras}/libexec/android-sdk-linux
 	      export ANDROID_NDK_HOME=${androidenv.androidndk}/libexec/${androidenv.androidndk.name}
