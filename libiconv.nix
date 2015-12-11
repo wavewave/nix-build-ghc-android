@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
   buildInputs = []; 
   phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" ];
   preConfigure = ''
-    export NDK=${androidndk}/libexec/android-ndk-r10c/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64
+    export NDK=${androidndk}/libexec/${androidndk.name}/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64
     export NDK_TARGET=arm-linux-androideabi
     export CC=${ndkWrapper}/bin/$NDK_TARGET-gcc
     export LD=${ndkWrapper}/bin/$NDK_TARGET-ld
