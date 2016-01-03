@@ -273,4 +273,9 @@ self: super: {
   # https://github.com/DanielG/cabal-helper/issues/10
   cabal-helper = dontCheck super.cabal-helper;
 
+  # no integer-gmp
+  cryptonite = disableCabalFlag super.cryptonite "integer-gmp";
+
+
+
 }
