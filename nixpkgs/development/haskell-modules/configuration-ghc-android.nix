@@ -276,8 +276,12 @@ self: super: {
   # no integer-gmp
   cryptonite = disableCabalFlag super.cryptonite "integer-gmp";
 
+  # no use of const_str
   zlib = overrideCabal super.zlib (drv: {
     prePatch = ''sed -i 's|#{const_str ZLIB_VERSION}|\"${pkgs.zlib.version}\"|' Codec/Compression/Zlib/Stream.hsc''; 
   });
+
+  # no template haskell
+  monad-logger = disableCabalFlag super.monad-logger "template_haskell";
 
 }
