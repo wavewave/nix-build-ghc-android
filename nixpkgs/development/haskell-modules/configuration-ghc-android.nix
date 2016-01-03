@@ -38,9 +38,6 @@ self: super: {
   unix = null;
   xhtml = null;
 
-  #random = dontCheck super.random;
-  #network = dontCheck super.network;
-  #primitive = dontCheck super.primitive;
   cmdargs = disableCabalFlag super.cmdargs "quotation";
 
   # ekmett/linear#74
