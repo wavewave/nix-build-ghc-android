@@ -1,0 +1,73 @@
+diff -rupN a/Network.hs b/Network.hs
+--- a/Network.hs	2016-01-07 23:49:58.386087797 +0000
++++ b/Network.hs	2016-01-07 23:51:39.725538317 +0000
+@@ -107,7 +107,8 @@ connectTo hostname (PortNumber port) = c
+ -- IPv4 only.
+ 
+ connectTo hostname (Service serv) = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     bracketOnError
+         (socket AF_INET Stream proto)
+         (sClose)  -- only done if there's an error
+@@ -119,7 +120,8 @@ connectTo hostname (Service serv) = do
+         )
+ 
+ connectTo hostname (PortNumber port) = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     bracketOnError
+         (socket AF_INET Stream proto)
+         (sClose)  -- only done if there's an error
+@@ -145,7 +147,8 @@ connectTo _ (UnixSocket path) = do
+ connect' :: HostName -> ServiceName -> IO Handle
+ 
+ connect' host serv = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     let hints = defaultHints { addrFlags = [AI_ADDRCONFIG]
+                              , addrProtocol = proto
+                              , addrSocketType = Stream }
+@@ -191,7 +194,8 @@ listenOn (PortNumber port) = listen' (sh
+ -- IPv4 only.
+ 
+ listenOn (Service serv) = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     bracketOnError
+         (socket AF_INET Stream proto)
+         (sClose)
+@@ -204,7 +208,8 @@ listenOn (Service serv) = do
+         )
+ 
+ listenOn (PortNumber port) = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     bracketOnError
+         (socket AF_INET Stream proto)
+         (sClose)
+@@ -233,7 +238,8 @@ listenOn (UnixSocket path) =
+ listen' :: ServiceName -> IO Socket
+ 
+ listen' serv = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     -- We should probably specify addrFamily = AF_INET6 and the filter
+     -- code below should be removed. AI_ADDRCONFIG is probably not
+     -- necessary. But this code is well-tested. So, let's keep it.
+@@ -345,7 +351,8 @@ recvFrom :: HostName    -- Hostname
+ 
+ #if defined(IPV6_SOCKET_SUPPORT)
+ recvFrom host port = do
+-    proto <- getProtocolNumber "tcp"
++    -- proto <- getProtocolNumber "tcp"
++    let proto = 6
+     let hints = defaultHints { addrFlags = [AI_ADDRCONFIG]
+                              , addrProtocol = proto
+                              , addrSocketType = Stream }
