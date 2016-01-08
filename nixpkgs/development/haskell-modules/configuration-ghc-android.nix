@@ -282,6 +282,6 @@ self: super: {
   monad-logger = disableCabalFlag super.monad-logger "template_haskell";
 
   # do not use getProtocolNumber
-  network = appendPatch super.network ./patches/network-android.patch; # ./patches/network-tcp-for-binoic.patch;
+  network = appendPatch (appendPatch super.network ./patches/network-android.patch) ./patches/network-tcp-for-bionic.patch;
 
 }
