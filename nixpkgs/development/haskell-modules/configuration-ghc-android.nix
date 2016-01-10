@@ -284,4 +284,13 @@ self: super: {
   # do not use getProtocolNumber
   network = appendPatch (appendPatch super.network ./patches/network-android.patch) ./patches/network-tcp-for-bionic.patch;
 
+  double-conversion = overrideCabal super.double-conversion (drv: {
+    version = "2.0.1.1";
+    src = pkgs.fetchFromGitHub {
+      owner = "bos";
+      repo = "double-conversion";
+      rev = "f4c29ec8faca989b988788651e0286e94439a1c6";
+      sha256 = "1i1q0vq7yxsaik7jcbjr26wgpkf5nx21yx1k1crcnrkdivaskfgh";
+    };
+  });
 }
