@@ -293,4 +293,11 @@ self: super: {
       sha256 = "1i1q0vq7yxsaik7jcbjr26wgpkf5nx21yx1k1crcnrkdivaskfgh";
     };
   });
+
+  hlint = overrideCabal super.hlint (drv: {
+    version = "1.9.28";
+    sha256 = "047pqyjf13ma2f3igk7vrrlaz42sbrnmljfw4bss2qn33656a1pb";
+  });
+
+  reflection = disableCabalFlag super.reflection "template-haskell";
 }
