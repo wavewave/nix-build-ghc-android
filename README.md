@@ -1,7 +1,8 @@
 nix-build-ghc-android
 =====================
 
-*NOTE: nixpkgs is a moving target. This nix build has been tested against commit: de2bba6d8c2701fceb8c2904a4270559f77beedf*
+*NOTE: nixpkgs is a moving target. This nix build has been tested against commit: ce2756f701886313180655a069202f3771621404 (2016-01-19)*
+
 
 This repo contains nix expressions to build ghc as a cross compiler for android.
 This automatically downloads sources for ghc-7.10.2 and android-ndk r10c.

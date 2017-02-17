@@ -30,7 +30,7 @@ let ndkWrapper = import ./ndk-wrapper.nix { inherit stdenv makeWrapper androidnd
                 androidenv.platformTools androidenv.androidsdk_5_1_1_extras
 		androidenv.androidndk 
 		jdk schedtool utillinux m4 gperf
-                perl libxml2 zip unzip bison flex lzop gradle26
+                perl libxml2 zip unzip bison flex lzop gradle
 		hsenv ghc-android-env ndkWrapper
                 protobuf
                 pkgconfig
