@@ -1,6 +1,7 @@
 nix-build-ghc-android
 =====================
 
+*FINAL NOTE: The build adjustment done in this repo has been merged into Nixpkgs and GHC. Therefore, this repo is archived.
 *NOTE: nixpkgs is a moving target. This nix build has been tested against commit: ce2756f701886313180655a069202f3771621404 (2016-01-19)*
 
 
